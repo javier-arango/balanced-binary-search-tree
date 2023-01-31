@@ -1,80 +1,8 @@
-//
-// Created by Javier Arango on 2/11/22.
-//
-
-#pragma once
-
-#include <iostream>
-#include <vector>
-
-
-// AVL Tree
-class AVLTree {
-    // Tree node
-    class TreeNode {
-    public:
-        // Attributes
-        int gatorID;
-        std::string fullName;
-        int height;
-        TreeNode *left, *right;
-
-        // Constructor
-        TreeNode(int id, std::string &name) : gatorID(id), fullName(name), height(0), left(nullptr), right(nullptr) {}
-
-        // Methods
-        int getHeight(TreeNode *node) {
-            // Check if the node is empty
-            if (node == nullptr) return -1;
-
-            // Increase the height
-            return 1 + std::max(getHeight(node->left), getHeight(node->right));
-        }
-    };
-
-    // Attributes
-    TreeNode *rootNode;
-
-    // Normal methods
-    TreeNode *deleteTree(TreeNode* root);  // Delete all the nodes from memory
-    int getBalance(TreeNode *node);  // Get balance of the node
-    TreeNode *leftRotation(TreeNode *root);  // Left rotation
-    TreeNode *rightRotation(TreeNode *root);  // Right rotation
-    TreeNode *getParentNode(TreeNode *root, int id);  // Helper function to find the parent node
-
-    // Helper methods
-    TreeNode *insertHelper(TreeNode *root, int id, std::string name);  // Helper method to insert ID and Name into node
-    TreeNode *removeIDHelper(TreeNode *root, int id);  // Helper method to remove ID
-    TreeNode *inorderSuccessor(TreeNode *root);  // Find the in order successor to delete when is two children
-    TreeNode *searchIDHelper(TreeNode* root, int id);  // Helper method to search for specific ID
-    void searchNameHelper(TreeNode *root, std::vector<int> &namesVector, std::string &name);  // Helper method to search for specific name
-    void printInorderHelper(TreeNode *root, std::vector<std::string> &names);  // Helper method to print inorder traversal
-    void printPreorderHelper(TreeNode *root, std::vector<std::string> &names);  // Helper method to print preorder traversal
-    void printPostorderHelper(TreeNode *root, std::vector<std::string> &names);  // Helper method to print postorder traversal
-    void removeInorderNHelper(TreeNode *root, int &idVector, int &count, int targetN);  // Helper function to delete Nth node
-
-public:
-    // Constructor
-    AVLTree() : rootNode(nullptr) {}
-
-    // Destructor
-    ~AVLTree() { rootNode = deleteTree(rootNode); }
-
-    // Public Methods
-    void insertNameID(int id, std::string &name);  // Add a Student object into the tree with the specified name, NAME and GatorID number, ID.
-    void removeID(int id);  // Find and remove the account with the specified ID from the tree.
-    void searchID(int id);  // Search for the student with the specified ID from the tree.
-    void searchName(std::string name);  // Search for the student with the specified ID from the tree.
-    void printInorder();  // Print out a comma separated inorder traversal of the names in the tree.
-    void printPreorder();  // Print out a comma separated preorder traversal of the names in the tree.
-    void printPostorder();  // Print out a comma separated postorder traversal of the names in the tree.
-    void printLevelCount();  // Prints the number of levels that exist in the tree.
-    void removeInorderN(int n);  // Remove the Nth GatorID from the inorder traversal of the tree (N = 0 for the first item, etc).
-};
+#include "avl_tree.h"
 
 // TODO: Helper methods
 // Delete all the nodes from memory
-AVLTree::TreeNode *AVLTree::deleteTree(TreeNode* root) {
+avl_tree::TreeNode *avl_tree::deleteTree(TreeNode* root) {
     if(root == nullptr) return nullptr;
     else {
         deleteTree(root->left);  // Go to the left node
@@ -85,11 +13,11 @@ AVLTree::TreeNode *AVLTree::deleteTree(TreeNode* root) {
 }
 
 // Insert function | Helper method
-AVLTree::TreeNode *AVLTree::insertHelper(TreeNode *root, int id, std::string name) {
+avl_tree::TreeNode *avl_tree::insertHelper(TreeNode *root, int id, std::string name) {
     // Create new node if root is empty
     if (root == nullptr) { root = new TreeNode(id, name); }
 
-    // Insert value in left node else insert it in right node
+        // Insert value in left node else insert it in right node
     else if (id < root->gatorID) root->left = insertHelper(root->left, id, name);
     else root->right = insertHelper(root->right, id, name);
 
@@ -103,7 +31,7 @@ AVLTree::TreeNode *AVLTree::insertHelper(TreeNode *root, int id, std::string nam
         if (getBalance(root->left) < 0) root = leftRotation(root->left);  // Left-Right Case | Left Right Rotation
         return rightRotation(root);  // Right Rotation
     }
-    // Right-Right or Right-left Case
+        // Right-Right or Right-left Case
     else if (balance < -1) {
         if (getBalance(root->right) > 0) root->right = rightRotation(root->right);  // Right-Left Case | Right Left Rotation
         return leftRotation(root);  // Left Rotation
@@ -114,7 +42,7 @@ AVLTree::TreeNode *AVLTree::insertHelper(TreeNode *root, int id, std::string nam
 }
 
 // Find the in order successor to delete when is two children
-AVLTree::TreeNode *AVLTree::inorderSuccessor(TreeNode *root) {
+avl_tree::TreeNode *avl_tree::inorderSuccessor(TreeNode *root) {
     // The tree is empty
     if (root == nullptr) return nullptr;
 
@@ -124,7 +52,7 @@ AVLTree::TreeNode *AVLTree::inorderSuccessor(TreeNode *root) {
 }
 
 // Helper function to find the parent node
-AVLTree::TreeNode *AVLTree::getParentNode(TreeNode *root, int id) {
+avl_tree::TreeNode *avl_tree::getParentNode(TreeNode *root, int id) {
     // Empty tree
     if (root == nullptr) return nullptr;
 
@@ -139,12 +67,12 @@ AVLTree::TreeNode *AVLTree::getParentNode(TreeNode *root, int id) {
                 parent = root;
                 root = root->left;
             }
-            // Go to the right nodes
+                // Go to the right nodes
             else if (root->gatorID < id) {
                 parent = root;
                 root = root->right;
             }
-            // break bc we found the parent already, and I don't need the child
+                // break bc we found the parent already, and I don't need the child
             else break;
         }
     }
@@ -154,7 +82,7 @@ AVLTree::TreeNode *AVLTree::getParentNode(TreeNode *root, int id) {
 }
 
 // Helper method to remove ID
-AVLTree::TreeNode *AVLTree::removeIDHelper(TreeNode *root, int id) {
+avl_tree::TreeNode *avl_tree::removeIDHelper(TreeNode *root, int id) {
     // Search id and parent of the ID node
     TreeNode *parent = getParentNode(root, id);  // Find parent
     TreeNode *curr = searchIDHelper(root, id);  // Find the node to remove
@@ -171,13 +99,13 @@ AVLTree::TreeNode *AVLTree::removeIDHelper(TreeNode *root, int id) {
             if (parent->left == curr) parent->left = nullptr;
             else parent->right = nullptr;
         }
-        // Delete the root
+            // Delete the root
         else root = nullptr;
 
         // TODO: Free Memory
         free(curr);
     }
-    // Case 2 | Node to remove have One Child
+        // Case 2 | Node to remove have One Child
     else if (curr->left == nullptr || curr->right == nullptr) {
         // Child node
         TreeNode *child = (curr->right != nullptr ? curr->right : curr->left);
@@ -189,14 +117,14 @@ AVLTree::TreeNode *AVLTree::removeIDHelper(TreeNode *root, int id) {
                 parent->right = child;
             }
         }
-        // Delete the root
+            // Delete the root
         else root = child;
 
         // TODO: Free Memory
         free(curr);
     }
 
-    // Case 3 | Node to remove have Two Children
+        // Case 3 | Node to remove have Two Children
     else {
         // Inorder successor
         TreeNode *successor = inorderSuccessor(curr->right);
@@ -214,7 +142,7 @@ AVLTree::TreeNode *AVLTree::removeIDHelper(TreeNode *root, int id) {
 }
 
 // Search for specific ID | Helper method
-AVLTree::TreeNode *AVLTree::searchIDHelper(TreeNode* root, int id) {
+avl_tree::TreeNode *avl_tree::searchIDHelper(TreeNode* root, int id) {
     // Empty node
     if (root == nullptr) return nullptr;
 
@@ -226,7 +154,7 @@ AVLTree::TreeNode *AVLTree::searchIDHelper(TreeNode* root, int id) {
 }
 
 // Helper method to search for specific name
-void AVLTree::searchNameHelper(TreeNode *root, std::vector<int> &idsVector, std::string &name) {
+void avl_tree::searchNameHelper(TreeNode *root, std::vector<int> &idsVector, std::string &name) {
     if (root == nullptr) return;
 
     // ROOT
@@ -240,7 +168,7 @@ void AVLTree::searchNameHelper(TreeNode *root, std::vector<int> &idsVector, std:
 }
 
 // Helper method print inorder traversal
-void AVLTree::printInorderHelper(TreeNode *root, std::vector<std::string> &names) {
+void avl_tree::printInorderHelper(TreeNode *root, std::vector<std::string> &names) {
     if (root == nullptr) return;
 
     // LEFT - ROOT - RIGHT
@@ -250,7 +178,7 @@ void AVLTree::printInorderHelper(TreeNode *root, std::vector<std::string> &names
 }
 
 // Helper method print preorder traversal
-void AVLTree::printPreorderHelper(TreeNode *root, std::vector<std::string> &names) {
+void avl_tree::printPreorderHelper(TreeNode *root, std::vector<std::string> &names) {
     if (root == nullptr) return;
 
     // ROOT - LEFT - RIGHT
@@ -260,7 +188,7 @@ void AVLTree::printPreorderHelper(TreeNode *root, std::vector<std::string> &name
 }
 
 // Helper method print postorder traversal
-void AVLTree::printPostorderHelper(TreeNode *root, std::vector<std::string> &names) {
+void avl_tree::printPostorderHelper(TreeNode *root, std::vector<std::string> &names) {
     if (root == nullptr) return;
 
     // LEFT - RIGHT - ROOT
@@ -270,7 +198,7 @@ void AVLTree::printPostorderHelper(TreeNode *root, std::vector<std::string> &nam
 }
 
 // Helper function to delete Nth node
-void AVLTree::removeInorderNHelper(TreeNode *root, int &getId, int &count, int targetN) {
+void avl_tree::removeInorderNHelper(TreeNode *root, int &getId, int &count, int targetN) {
     if (root == nullptr) return;
 
     // Move left
@@ -283,10 +211,10 @@ void AVLTree::removeInorderNHelper(TreeNode *root, int &getId, int &count, int t
 }
 
 // Get node balance | height(node->left) - height(node->right)
-int AVLTree::getBalance(TreeNode *node) { return node->getHeight(node->left) - node->getHeight(node->right); }
+int avl_tree::getBalance(TreeNode *node) { return node->getHeight(node->left) - node->getHeight(node->right); }
 
 // Left rotation
-AVLTree::TreeNode *AVLTree::leftRotation(TreeNode *root) {
+avl_tree::TreeNode *avl_tree::leftRotation(TreeNode *root) {
     TreeNode *grandChild = root->right->left;
     TreeNode *newParent = root->right;
     newParent->left = root;
@@ -296,7 +224,7 @@ AVLTree::TreeNode *AVLTree::leftRotation(TreeNode *root) {
 }
 
 // Right rotation
-AVLTree::TreeNode *AVLTree::rightRotation(TreeNode *root) {
+avl_tree::TreeNode *avl_tree::rightRotation(TreeNode *root) {
     TreeNode *grandChild = root->left->right;
     TreeNode *newParent = root->left;
     newParent->right = root;
@@ -306,40 +234,51 @@ AVLTree::TreeNode *AVLTree::rightRotation(TreeNode *root) {
 }
 
 
-// TODO: Normal Methods
+// TODO: Methods
 // Insert name & ID into tree
-void AVLTree::insertNameID(int id, std::string &name) {
+void avl_tree::insertNameID(int id, std::string &name) {
     if (searchIDHelper(rootNode, id) == nullptr) {
         rootNode = insertHelper(rootNode, id, name);
-        std::cout << "successful" << std::endl;
+        std::cout << name << " was successfully added to the tree" << std::endl;
     } else {
-        std::cout << "unsuccessful" << std::endl;
+        std::cout << "unsuccessful insertion" << std::endl;
     }
 }
 
 // Search user by ID
-void AVLTree::searchID(int id) {
+void avl_tree::searchID(int id) {
     TreeNode *idSearched = searchIDHelper(rootNode, id);
 
-    if (idSearched == nullptr) std::cout << "unsuccessful" << std::endl;
+    if (idSearched == nullptr) std::cout << "unsuccessful search by ID" << std::endl;
     else std::cout << idSearched->fullName << std::endl;
 }
 
 // Search for the student with the specified ID from the tree.
-void AVLTree::searchName(std::string name) {
+void avl_tree::searchName(std::string name) {
     std::vector<int> ids;
     searchNameHelper(rootNode, ids, name);
-    if (ids.empty()) std::cout << "unsuccessful" << std::endl;
+    if (ids.empty()) std::cout << "unsuccessful search by name" << std::endl;
 }
 
 // Find and remove the account with the specified ID from the tree.
-void AVLTree::removeID(int id) {
+void avl_tree::removeID(int id) {
     rootNode = removeIDHelper(rootNode, id);
-    if (rootNode != nullptr) std::cout << "successful" << std::endl;
+    if (rootNode != nullptr)
+        std::cout << "Student with id: " << id << " was successfully removed from the tree." << std::endl;
+}
+
+// Remove the Nth GatorID from the inorder traversal of the tree (N = 0 for the first item, etc).
+void avl_tree::removeInorderN(int n) {
+    int count = 0;
+    int nodeID = 1000000;
+    removeInorderNHelper(rootNode, nodeID, count, n);
+    rootNode = removeIDHelper(rootNode, nodeID);
+    if (rootNode != nullptr)
+        std::cout << "Student at location " << n << " was: " << rootNode->fullName << " and it was successfully removed from the tree." << std::endl;
 }
 
 // Print out a comma separated inorder traversal of the names in the tree.
-void AVLTree::printInorder() {
+void avl_tree::printInorder() {
     if (rootNode == nullptr) return;
     else {
         std::vector<std::string> names;
@@ -354,7 +293,7 @@ void AVLTree::printInorder() {
 }
 
 // Print out a comma separated preorder traversal of the names in the tree.
-void AVLTree::printPreorder() {
+void avl_tree::printPreorder() {
     if (rootNode == nullptr) return;
     else {
         std::vector<std::string> names;
@@ -369,7 +308,7 @@ void AVLTree::printPreorder() {
 }
 
 // Print out a comma separated postorder traversal of the names in the tree.
-void AVLTree::printPostorder() {
+void avl_tree::printPostorder() {
     if (rootNode == nullptr) return;
     else {
         std::vector<std::string> names;
@@ -384,16 +323,7 @@ void AVLTree::printPostorder() {
 }
 
 // Prints the number of levels that exist in the tree.
-void AVLTree::printLevelCount() {
+void avl_tree::printLevelCount() {
     if (rootNode == nullptr) std::cout << 0 << std::endl;
     else std::cout << rootNode->getHeight(rootNode) + 1 << std::endl;
-}
-
-// Remove the Nth GatorID from the inorder traversal of the tree (N = 0 for the first item, etc).
-void AVLTree::removeInorderN(int n) {
-    int count = 0;
-    int nodeID = 1000000;
-    removeInorderNHelper(rootNode, nodeID, count, n);
-    rootNode = removeIDHelper(rootNode, nodeID);
-    if (rootNode != nullptr) std::cout << "successful" << std::endl;
 }

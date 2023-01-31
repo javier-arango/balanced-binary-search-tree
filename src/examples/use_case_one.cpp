@@ -1,7 +1,8 @@
 #include <iostream>
 #include <vector>
 #include <regex>
-#include "AVLTree.h"
+
+#include "avl_tree.h"
 
 
 using namespace std;
@@ -56,18 +57,32 @@ int main() {
     // Operations
     const std::string INSERT = "insert";
     const std::string REMOVE = "remove";
+    const std::string REMOVEINORDER = "removeInorder";
     const std::string SEARCH = "search";
     const std::string PRINTINORDER = "printInorder";
     const std::string PRINTPREORDER = "printPreorder";
     const std::string PRINTPOSTORDER = "printPostorder";
     const std::string PRINTLEVELCOUNT = "printLevelCount";
-    const std::string REMOVEINORDER = "removeInorder";
 
     // Tree
-    AVLTree avlTree;
+    avl_tree avlTree;
+
+    // Welcome message
+    cout << "Welcome to the AVL Tree Menu! (organize student accounts based on IDs)" << endl;
+    cout << "You are allow to manipulate the tree by using different operations such as: " << endl;
+    cout << "1- insert: Add a Student object into the tree with the specified name, number ID. The ID must be unique." << endl;
+    cout << "2- remove: Find and remove the account with the specified ID from the tree." << endl;
+    cout << "3- removeInorder. Remove the Nth ID from the inorder traversal of the tree (N = 0 for the first item, etc)." << endl << endl;
+    cout << "4- search: Search for the student with the specified ID or name from the tree." << endl;
+    cout << "5- printInorder: Print the tree using inOrder traversal." << endl;
+    cout << "6- printPreorder: Print the tree using preOrder traversal." << endl;
+    cout << "7- printPostorder: Print the tree using postOrder traversal." << endl;
+    cout << "8- printLevelCount: Print the tree using levelOrder traversal." << endl;
+
 
     // Get number of commands
     int commandNum = 0;
+    cout << "Please enter the number the operations (use integers numbers) you want to do (Example: 1): ";
     cin >> commandNum;  // Get number
 
 
@@ -81,16 +96,19 @@ int main() {
 
         // Get operation to execute
         string operation = " ";
+        cout << "Please add the operation you want to do using the names provided in the menu. ";
         cin >> operation;  // Get operation
 
         // Do the operation
         // Insert data to tree
         if(operation == INSERT) {
             // Get student name
+            cout << "Please add the student name (added inside double quotes). Example: \"Brandon\" ";
             cin >> studentName;
             studentName = getName(studentName);  // Get full name if available
             if (checkIsWord(studentName)) {
                 // Get gator id
+                cout << "Please add the student ID. Example: 45679999 ";
                 cin >> tempVal;
                 if (checkIsNumber(tempVal)) {
                     gatorID = stoi(tempVal);
@@ -112,6 +130,7 @@ int main() {
         // Remove data from tree
         else if (operation == REMOVE) {
             // Get gator id
+            cout << "Please add the student ID that you want to remove. Example: 45679999 ";
             cin >> tempVal;
             if (checkIsNumber(tempVal)) {
                 gatorID = stoi(tempVal);
@@ -123,6 +142,7 @@ int main() {
 
         // Search student in tree
         else if (operation == SEARCH) {
+            cout << "Please add the student ID that you want to search. Example: 45679999 ";
             cin >> tempVal;
             // Search with name
             if (checkIsWord(tempVal)) {
@@ -141,27 +161,32 @@ int main() {
 
         // Print inorder traversal
         else if (operation == PRINTINORDER) {
+            cout << "Printing in order:" << endl;
             avlTree.printInorder();  // Print inorder
         }
 
         // Print preorder traversal
         else if (operation == PRINTPREORDER) {
+            cout << "Printing in preorder:" << endl;
             avlTree.printPreorder();  // Print preorder
         }
 
         // Print postorder traversal
         else if (operation == PRINTPOSTORDER) {
+            cout << "Printing in postorder:" << endl;
             avlTree.printPostorder();  // Print postorder
         }
 
         // Print level count
         else if (operation == PRINTLEVELCOUNT) {
+            cout << "Printing in level count:" << endl;
             avlTree.printLevelCount();  // Print level count
         }
 
         // Remove the Nth node
         else if (operation == REMOVEINORDER) {
             // Get the position to delete
+            cout << "Please add the position of the node you want to delete: ";
             cin >> tempVal;
 
             if (checkIsNumber(tempVal)) {
